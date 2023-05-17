@@ -5,18 +5,21 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script>
     const images = [
-       '/images/4.jpg',
+      '/images/4.jpg',
       '/images/5.jpg',
-      '/images/6.jpg',
-      '/images/7.jpg',
-      '/images/8.png',
-      '/images/9.png',
-      '/images/8.png',
+      
     ]; // Add your image URLs here
 
     const results = [];
 
     function submitSelection() {
+      const nameInput = document.getElementById('name-input');
+      const name = nameInput.value.trim();
+      if (name === '') {
+        alert('Please enter your name.');
+        return;
+      }
+
       const selectedOptions = [];
 
       const imageContainers = document.getElementsByClassName('image-container');
@@ -30,7 +33,12 @@
         }
       }
 
-      axios.post('/results', { data: selectedOptions })
+      const payload = {
+        name: name,
+        selections: selectedOptions,
+      };
+
+      axios.post('/results', { data: payload })
         .then(() => {
           alert('Results submitted successfully.');
           results.length = 0; // Clear the results array
@@ -85,6 +93,8 @@
 </head>
 <body>
   <h1>Image Selection</h1>
+  <label for="name-input">Your Name:</label>
+  <input type="text" id="name-input" required>
   <div id="image-container"></div>
   <button onclick="submitSelection()">Submit</button>
 </body>
