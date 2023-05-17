@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Image Selection System</title>
+  <style>
+    /* Your CSS styles here */
+    h1 {
+    text-align: center;
+    }
+
+ 
+    .submit {
+  display: block;
+  margin: 0 auto;
+}
+
+  .image-container {
+  display: inline-block;
+  text-align: center;
+  margin: 20px;
+  width: 20%;
+  box-sizing: border-box;
+}
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+    }
+    .option-buttons {
+      margin-top: 10px;
+    }
+    .option-buttons button {
+      margin: 0 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #eaeaea;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .option-buttons button:active {
+  background-color: #bfbfbf;
+  transform: scale(0.95);
+}
+
+  </style>
+</head>
+<body>
+  <h1>Image Selection System</h1>
+
+  <div id="imageContainer"></div>
+
+  <button class="submit" onclick="submitSelection()">Submit</button>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+  const images = [
+       '/images/4.jpg',
+      '/images/5.jpg',
+    ]; // Add your image URLs here
+
+
+    var selections = [];
+
+    function submitSelection() {
+      const selectedOptions = [];
+
+      const optionElements = document.getElementsByClassName('option');
+      for (let i = 0; i < optionElements.length; i++) {
+        const optionElement = optionElements[i];
+        const value = parseInt(optionElement.value);
+        selectedOptions.push(value);
+      }
+
+      axios.post('/results', { data: selectedOptions })
+        .then(() => {
+          alert('Results submitted successfully.');
+          selections.length = 0; // Clear the results array
+        })
+        .catch((error) => {
+          console.error('Failed to submit results:', error);
+        });
+    }
+    axios.post('/results', { data: selectedOptions })
+        .then(() => {
+          alert('Results submitted successfully.');
+          results.length = 0; // Clear the results array
+        })
+        .catch((error) => {
+          console.error('Failed to submit results:', error);
+        });
+    
+
+    var activeButton = null;
+
+    function displayImages() {
+      var imageContainer = document.getElementById("imageContainer");
+      imageContainer.innerHTML = "";
+
+      for (var i = 0; i < images.length; i++) {
+        var imageDiv = document.createElement("div");
+        imageDiv.className = "image-container";
+        imageContainer.appendChild(imageDiv);
+
+        var image = document.createElement("img");
+        image.src = images[i];
+        imageDiv.appendChild(image);
+
+        var optionButtons = document.createElement("div");
+        optionButtons.className = "option-buttons";
+        imageDiv.appendChild(optionButtons);
+
+        var option0 = document.createElement("button");
+        option0.innerHTML = "0";
+        option0.onclick = makeSelection.bind(null, i, 0);
+        optionButtons.appendChild(option0);
+
+        var option1 = document.createElement("button");
+        option1.innerHTML = "1";
+        option1.onclick = makeSelection.bind(null, i, 1);
+        optionButtons.appendChild(option1);
+      }
+    }
+
+    function makeSelection(index, selection) {
+      selections[index] = selection;
+      
+    }
+
+
+    function calculateResult() {
+      if (selections.length !== images.length) {
+        alert("Please make a selection for each image.");
+        return;
+      }
+
+      var result = "Selections: " + selections.join(", ");
+      // Perform further calculations or process the selections array here
+
+      localStorage.setItem("result", result);
+
+      alert("Result: " + result);
+    }
+
+    displayImages();
+  </script>
+
+</body>
+</html>

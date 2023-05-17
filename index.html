@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image Selection</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const images = [
+       '/images/4.jpg',
+      '/images/5.jpg',
+      '/images/6.jpg',
+      '/images/7.jpg',
+      '/images/8.png',
+      '/images/9.png',
+      '/images/8.png',
+    ]; // Add your image URLs here
+
+    const results = [];
+
+    function submitSelection() {
+      const selectedOptions = [];
+
+      const imageContainers = document.getElementsByClassName('image-container');
+      for (let i = 0; i < imageContainers.length; i++) {
+        const imageContainer = imageContainers[i];
+        const selectedOption = imageContainer.querySelector('input[type=radio]:checked');
+
+        if (selectedOption) {
+          const value = parseInt(selectedOption.value);
+          selectedOptions.push(value);
+        }
+      }
+
+      axios.post('/results', { data: selectedOptions })
+        .then(() => {
+          alert('Results submitted successfully.');
+          results.length = 0; // Clear the results array
+        })
+        .catch((error) => {
+          console.error('Failed to submit results:', error);
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const imageContainer = document.getElementById('image-container');
+
+      images.forEach((imageUrl, index) => {
+        const imageElement = document.createElement('img');
+        imageElement.src = imageUrl;
+        imageElement.classList.add('image');
+
+        const option0 = document.createElement('input');
+        option0.type = 'radio';
+        option0.name = `option-${index}`;
+        option0.value = '0';
+        option0.classList.add('option');
+
+        const option1 = document.createElement('input');
+        option1.type = 'radio';
+        option1.name = `option-${index}`;
+        option1.value = '1';
+        option1.classList.add('option');
+
+        const imageContainerDiv = document.createElement('div');
+        imageContainerDiv.classList.add('image-container');
+        imageContainerDiv.appendChild(imageElement);
+        imageContainerDiv.appendChild(option0);
+        imageContainerDiv.appendChild(option1);
+
+        imageContainer.appendChild(imageContainerDiv);
+      });
+    });
+  </script>
+  <style>
+    .image-container {
+      display: inline-block;
+      margin: 10px;
+      text-align: center;
+    }
+
+    img {
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Image Selection</h1>
+  <div id="image-container"></div>
+  <button onclick="submitSelection()">Submit</button>
+</body>
+</html>
