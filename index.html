@@ -87,9 +87,6 @@
         name: name,
         selections: selectedOptions,
       }
-	  else(){
-	  alert("Please select a label for all the images")
-	  }
 
       axios.post('/results', { data: payload })
         .then(() => {
@@ -98,10 +95,10 @@
         })
         .catch((error) => {
           console.error('Failed to submit results:', error);
-        });}else{
+        });}
+		else{
 	  alert("Please select a label for all the images")
 	  }
-	 
 
       
     }
